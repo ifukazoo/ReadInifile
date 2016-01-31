@@ -1,0 +1,15 @@
+*.o
+*.obj
+*.out
+*.swp
+core
+tags
+lexer.c
+a.out
+lexer.c
+parser.c
+iniread
+y.tab.h
+y.output
+
+
