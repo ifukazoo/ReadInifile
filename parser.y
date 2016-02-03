@@ -1,13 +1,6 @@
 %{
-#include <stdio.h>
 #include <string.h>
-#include <map>
-#include <string>
-
-extern int yylineno;
-extern int yylex();
-extern int yyerror(std::map<std::string, std::string>&, const char*);
-
+#include "extern.h"
 %}
 %union {
   char* s;
@@ -31,45 +24,28 @@ keyvalline    : symbol '=' symbol '\n'
                     free($1);free($3);
                   }
               ;
-
-ws            :   { $$ = NULL; }
-              | SPACES
+symbol        : ws words ws
                   {
-                    char* p = strdup($1);
-                    $$ = p;
+                    $$ = strdup($2);
+                    free($1); free($2); free($3);
                   }
+              | ws '"' words '"' ws
+                {
+                  $$ = strdup($3);
+                  free($1); free($3); free($5);
+                }
               ;
-
-words         : STR
-                  {
-                    char* p = strdup($1);
-                    $$ = p;
-                  }
-              | words STR
-                  {
-                    strcat($1, $2);
-                    $$ = $1;
-                  }
+ws            :        { $$ = NULL; }
+              | SPACES { $$ = strdup($1); }
+              ;
+words         : STR       { $$ = strdup($1); }
+              | words STR { $$ = strcat($1, $2); }
               | words ws STR
                   {
                     strcat($1,$2); free($2);
                     strcat($1,$3);
                     $$ = $1;
                   }
-              ;
-
-symbol        : ws words ws
-                  {
-                    char* p = strdup($2);
-                    free($1); free($2); free($3);
-                    $$ = p;
-                  }
-              | ws '"' words '"' ws
-                {
-                  char* p = strdup($3);
-                  free($1); free($3); free($5);
-                  $$ = p;
-                }
               ;
 %%
 int yyerror(std::map<std::string, std::string>&, const char*)

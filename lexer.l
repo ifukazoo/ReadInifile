@@ -1,8 +1,7 @@
 %option noyywrap nodefault yylineno
 %s IQUOTE
 %{
-#include <string>
-#include <map>
+#include "extern.h"
 #include "y.tab.h"
 %}
 

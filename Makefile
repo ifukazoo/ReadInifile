@@ -1,7 +1,7 @@
 PROGRAM = iniread
 LEXER   = lexer
 PARSER  = parser
-OBJS    = main.o $(PARSER).o $(LEXER).o
+OBJS    = main.o api.o $(PARSER).o $(LEXER).o
 
 CC     = g++
 YACC   = bison
