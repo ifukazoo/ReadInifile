@@ -11,11 +11,11 @@
 /* コメント */
 }
 <INITIAL>[ \t]+ {
-  yylval.s = yytext;
+  yylval = yytext;
   return SPACES;
 }
 <INITIAL>[^\" \t=\n]+ {
-  yylval.s = yytext;
+  yylval = yytext;
   return STR;
 }
 <INITIAL>"=" {
@@ -31,17 +31,17 @@
 }
 <IQUOTE>"\\\"" {
   // クオート内でエスケープ付きクオート
-  yylval.s = &yytext[1];
+  yylval = &yytext[1];
   return STR;
 }
 <IQUOTE>"\\"  {
   // クオート内で単にBackSlash
-  yylval.s = yytext;
+  yylval = yytext;
   return STR;
 }
 <IQUOTE>[^\\"\n]+  {
   // クオート内では改行以外は全て取得
-  yylval.s = yytext;
+  yylval = yytext;
   return STR;
 }
 \n {

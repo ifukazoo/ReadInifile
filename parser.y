@@ -1,13 +1,11 @@
 %{
 #include <string.h>
+#include <string>
 #include "extern.h"
+
 %}
-%union {
-  char* s;
-}
 
 %token SPACES STR
-%type <s> SPACES STR words ws symbol
 
 %parse-param { std::map<std::string, std::string>& keyval }
 
@@ -15,37 +13,20 @@
 
 lines         :
               | lines keyvalline
-              | lines error '\n'  {yyerrok;}
+              | lines error '\n'       { yyerrok;}
               ;
 
-keyvalline    : symbol '=' symbol '\n'
-                  {
-                    keyval.insert(std::make_pair($1, $3));
-                    free($1);free($3);
-                  }
+keyvalline    : symbol '=' symbol '\n' { keyval.insert(std::make_pair($1, $3)); }
               ;
-symbol        : ws words ws
-                  {
-                    $$ = strdup($2);
-                    free($1); free($2); free($3);
-                  }
-              | ws '"' words '"' ws
-                {
-                  $$ = strdup($3);
-                  free($1); free($3); free($5);
-                }
+symbol        : ws words ws            { $$ = std::string($2); }
+              | ws '"' words '"' ws    { $$ = std::string($3); }
               ;
-ws            :        { $$ = NULL; }
-              | SPACES { $$ = strdup($1); }
+ws            :                        { $$ = ""; }
+              | SPACES                 { $$ = std::string($1); }
               ;
-words         : STR       { $$ = strdup($1); }
-              | words STR { $$ = strcat($1, $2); }
-              | words ws STR
-                  {
-                    strcat($1,$2); free($2);
-                    strcat($1,$3);
-                    $$ = $1;
-                  }
+words         : STR                    { $$ = std::string($1); }
+              | words STR              { $$ = std::string($1) + std::string($2); }
+              | words ws STR           { $$ = std::string($1) + std::string($2) + std::string($3); }
               ;
 %%
 int yyerror(std::map<std::string, std::string>&, const char*)

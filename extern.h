@@ -11,5 +11,6 @@ extern int yylex(void);
 extern FILE* yyin;
 extern int yyerror(std::map<std::string, std::string>&, const char*);
 extern int yyparse(std::map<std::string, std::string>&);
+#define YYSTYPE std::string
 
 #endif
