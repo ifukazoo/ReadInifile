@@ -17,7 +17,7 @@ int main(int argc, char const* argv[])
   std::map<std::string, std::string> keyval;
   parse(fp, keyval);
 
-  for (auto kv : keyval) {
+  for (const auto& kv : keyval) {
     std::cout << kv.first << ":" << kv.second << std::endl;
   }
 
