@@ -16,7 +16,7 @@ lines         :
               | lines error '\n'       { yyerrok;}
               ;
 
-keyvalline    : symbol '=' symbol '\n' { keyval.insert(std::make_pair($1, $3)); }
+keyvalline    : symbol '=' symbol '\n' { keyval.emplace(std::make_pair($1, $3)); }
               ;
 symbol        : ws words ws            { $$ = std::string($2); }
               | ws '"' words '"' ws    { $$ = std::string($3); }
